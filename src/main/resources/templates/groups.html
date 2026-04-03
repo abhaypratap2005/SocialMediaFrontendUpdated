@@ -34,15 +34,15 @@
                 <i class="fa-solid fa-user-group"></i> <span>Friends</span>
             </a>
 
-            <!-- ✅ NEW -->
-            <a th:href="@{/groups/{id}(id=${userId})}" class="nav-item active">
-                <i class="fa-solid fa-people-group"></i> <span>Groups</span>
-            </a>
 
             <a th:href="@{/trending}" class="nav-item">
                 <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
             </a>
         </nav>
+
+        <a th:href="@{/groups/{id}(id=${userId})}" class="nav-item active">
+            <i class="fa-solid fa-people-group"></i> <span>Groups</span>
+        </a>
 
         <div class="logout-container">
             <a th:href="@{/web/logout}" class="nav-item">
