@@ -22,7 +22,6 @@
         </div>
 
         <nav class="nav-menu">
-
             <a th:href="${userId != null} ? @{/feed/{id}(id=${userId})} : @{/login}" class="nav-item">
                 <i class="fa-solid fa-house"></i> <span>Feed</span>
             </a>
@@ -42,6 +41,7 @@
             <a th:href="@{/trending}" class="nav-item active">
                 <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
             </a>
+
             <a th:href="@{/groups/{id}(id=${userId})}" class="nav-item">
                 <i class="fa-solid fa-people-group"></i> <span>Groups</span>
             </a>
@@ -64,8 +64,7 @@
 
             <!-- EMPTY -->
             <div th:if="${trendingData == null or trendingData.isEmpty()}"
-                 class="p-4 text-center"
-                 style="color: var(--text-muted); padding: 60px 20px;">
+                 style="color: var(--text-muted); padding: 60px 20px; text-align: center;">
                 <i class="fa-solid fa-fire-flame-curved"
                    style="font-size: 4rem; opacity: 0.2; margin-bottom: 20px;"></i>
                 <p>No trending topics currently.</p>
@@ -76,10 +75,8 @@
 
                 <div th:each="post : ${trendingData}" class="trending-item">
 
-                    <a th:href="${userId != null} ?
-                        @{/post/{postId}/{userId}(postId=${post.postId}, userId=${userId})}
-                        : @{/login}"
-                       style="display: flex; gap: 16px; width: 100%;">
+                    <!-- ✅ NO LINK HERE -->
+                    <div style="display: flex; gap: 16px; width: 100%;">
 
                         <div class="trending-avatar"
                              th:text="${post.username != null ? post.username.substring(0,1).toUpperCase() : 'T'}">
@@ -108,14 +105,10 @@
                                     <span th:text="${post.comments}"></span>
                                 </div>
 
-<!--                                <div class="trending-meta-item" style="margin-left: auto;">-->
-<!--                                    <span style="font-size: 0.75rem; color: #999;"-->
-<!--                                          th:text="'User ID: ' + ${post.userId}"></span>-->
-<!--                                </div>-->
-
                             </div>
                         </div>
-                    </a>
+
+                    </div>
 
                 </div>
 
@@ -125,7 +118,6 @@
 
     <!-- RIGHT SIDEBAR -->
     <aside class="right-sidebar">
-
         <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 20px;">
             <i class="fa-solid fa-fire-flame-curved"></i> Trending Topics
         </h3>
@@ -136,7 +128,6 @@
             <div><a th:href="@{/trending}">#News</a></div>
             <div><a th:href="@{/trending}">#Hi</a></div>
         </div>
-
     </aside>
 
 </div>
