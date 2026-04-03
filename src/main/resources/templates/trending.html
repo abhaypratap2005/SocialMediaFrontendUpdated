@@ -42,7 +42,9 @@
             <a th:href="@{/trending}" class="nav-item active">
                 <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
             </a>
-
+            <a th:href="@{/groups/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-people-group"></i> <span>Groups</span>
+            </a>
         </nav>
 
         <div class="logout-container">

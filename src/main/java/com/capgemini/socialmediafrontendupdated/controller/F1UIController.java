@@ -315,4 +315,26 @@ public class F1UIController {
             return "redirect:/login";
         }
     }
+
+    @GetMapping("/groups/{userId}")
+    public String showGroups(@PathVariable int userId,
+                             HttpSession session,
+                             Model model) {
+
+        String url = BASE_URL + "/users/" + userId + "/groups";
+
+        try {
+            ResponseEntity<GroupDTO[]> response =
+                    callApiWithJwt(url, HttpMethod.GET, session, GroupDTO[].class);
+
+            model.addAttribute("groups", Arrays.asList(response.getBody()));
+            model.addAttribute("userId", userId);
+
+            return "groups";
+
+        } catch (Exception e) {
+            session.invalidate();
+            return "redirect:/login";
+        }
+    }
 }

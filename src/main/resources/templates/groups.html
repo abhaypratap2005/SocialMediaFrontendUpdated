@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Groups | Social Media</title>
+
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/groups.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <a th:href="@{/feed/{id}(id=${userId})}">
+                <i class="fa-solid fa-cloud"></i>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+            <a th:href="@{/feed/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-house"></i> <span>Feed</span>
+            </a>
+            <a th:href="@{/messages/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-envelope"></i> <span>Messages</span>
+            </a>
+            <a th:href="@{/notifications/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-bell"></i> <span>Notifications</span>
+            </a>
+            <a th:href="@{/friends/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-user-group"></i> <span>Friends</span>
+            </a>
+
+            <!-- ✅ NEW -->
+            <a th:href="@{/groups/{id}(id=${userId})}" class="nav-item active">
+                <i class="fa-solid fa-people-group"></i> <span>Groups</span>
+            </a>
+
+            <a th:href="@{/trending}" class="nav-item">
+                <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
+            </a>
+        </nav>
+
+        <div class="logout-container">
+            <a th:href="@{/web/logout}" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-frame">
+        <header class="page-header">
+            <h2>Your Groups</h2>
+        </header>
+
+        <div class="groups-container">
+
+            <!-- EMPTY -->
+            <div th:if="${groups == null or groups.empty}" class="empty-state">
+                <i class="fa-solid fa-users-slash"></i>
+                <p>No groups joined yet</p>
+            </div>
+
+            <!-- GROUP LIST -->
+            <div th:each="group : ${groups}" class="group-card">
+
+                <div class="group-header">
+                    <div class="group-avatar"
+                         th:text="${group.groupName.substring(0,1).toUpperCase()}">
+                        G
+                    </div>
+
+                    <div>
+                        <h3 th:text="${group.groupName}">Group Name</h3>
+                        <p th:text="'Admin: ' + ${group.adminName}">Admin</p>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </main>
+
+</div>
+</body>
+</html>

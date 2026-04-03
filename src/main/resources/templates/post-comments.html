@@ -38,6 +38,9 @@
             <a th:href="@{/trending}" class="nav-item">
                 <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
             </a>
+            <a th:href="@{/groups/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-people-group"></i> <span>Groups</span>
+            </a>
         </nav>
 
         <div class="logout-container">
@@ -83,10 +86,10 @@
                 
                 <div class="comment-text" th:text="${comment.commentText}">Comment textContent...</div>
                 
-                <div class="post-actions" style="max-width: 200px; font-size: 0.85rem;">
-                    <div class="action-item"><i class="fa-regular fa-heart"></i> <span th:text="${comment.likeCount}">0</span></div>
-                    <div class="action-item"><i class="fa-solid fa-share-nodes"></i></div>
-                </div>
+<!--                <div class="post-actions" style="max-width: 200px; font-size: 0.85rem;">-->
+<!--                    <div class="action-item"><i class="fa-regular fa-heart"></i> <span th:text="${comment.likeCount}">0</span></div>-->
+<!--                    <div class="action-item"><i class="fa-solid fa-share-nodes"></i></div>-->
+<!--                </div>-->
                 
                 <div style="font-size: 0.7rem; color: #999; margin-top: 10px;">
                     <span th:text="'Comment ID: ' + ${comment.commentID}">ID</span> · 

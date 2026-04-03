@@ -2,7 +2,6 @@ package com.capgemini.socialmediafrontendupdated.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-
 @Data
 public class FriendDTO {
 
@@ -12,15 +11,14 @@ public class FriendDTO {
     @JsonProperty("user1Id")
     private Integer user1ID;
 
-    @JsonProperty("user1Username")
+    @JsonProperty("user1Name")
     private String user1Name;
 
     @JsonProperty("user2Id")
     private Integer user2ID;
 
-    @JsonProperty("user2Username")
+    @JsonProperty("user2Name")
     private String user2Name;
 
     private String since;
-
 }

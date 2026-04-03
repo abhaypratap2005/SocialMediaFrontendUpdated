@@ -38,6 +38,9 @@
             <a th:href="@{/trending}" class="nav-item">
                 <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
             </a>
+            <a th:href="@{/groups/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-people-group"></i> <span>Groups</span>
+            </a>
         </nav>
 
         <div class="logout-container">
@@ -76,12 +79,12 @@
             </div>
 
             <!-- ACTIONS -->
-            <div class="post-hero-actions">
-                <div class="action-item"><i class="fa-regular fa-comment"></i></div>
-                <div class="action-item"><i class="fa-solid fa-retweet"></i></div>
-                <div class="action-item like"><i class="fa-regular fa-heart"></i></div>
-                <div class="action-item"><i class="fa-solid fa-share-nodes"></i></div>
-            </div>
+<!--            <div class="post-hero-actions">-->
+<!--                <div class="action-item"><i class="fa-regular fa-comment"></i></div>-->
+<!--                <div class="action-item"><i class="fa-solid fa-retweet"></i></div>-->
+<!--                <div class="action-item like"><i class="fa-regular fa-heart"></i></div>-->
+<!--                <div class="action-item"><i class="fa-solid fa-share-nodes"></i></div>-->
+<!--            </div>-->
 
             <!-- TABS FOR INTERACTION -->
             <div class="post-interaction-tabs">

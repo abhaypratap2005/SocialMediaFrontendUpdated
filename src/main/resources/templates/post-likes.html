@@ -38,6 +38,9 @@
             <a th:href="@{/trending}" class="nav-item">
                 <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
             </a>
+            <a th:href="@{/groups/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-people-group"></i> <span>Groups</span>
+            </a>
         </nav>
 
         <div class="logout-container">
@@ -87,7 +90,7 @@
                 </div>
             </div>
 
-            <button class="btn btn-outline" style="padding: 6px 16px; font-size: 0.85rem;">Follow</button>
+<!--            <button class="btn btn-outline" style="padding: 6px 16px; font-size: 0.85rem;">Follow</button>-->
         </div>
 
         <div style="padding: 20px; text-align: center;">

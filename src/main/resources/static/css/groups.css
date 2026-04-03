@@ -1,0 +1,41 @@
+.groups-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.group-card {
+    background: var(--bg);
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.group-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.group-avatar {
+    width: 45px;
+    height: 45px;
+    background: var(--primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.group-description {
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.group-footer {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
