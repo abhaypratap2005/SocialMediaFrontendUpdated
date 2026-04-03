@@ -57,78 +57,223 @@
     <!-- MAIN -->
     <main class="main-frame">
         <header class="page-header">
-            <h2>Trending</h2>
+            <h2 id="current-topic-title">Trending</h2>
         </header>
 
-        <div class="trending-wrap">
-
-            <!-- EMPTY -->
-            <div th:if="${trendingData == null or trendingData.isEmpty()}"
-                 style="color: var(--text-muted); padding: 60px 20px; text-align: center;">
-                <i class="fa-solid fa-fire-flame-curved"
-                   style="font-size: 4rem; opacity: 0.2; margin-bottom: 20px;"></i>
-                <p>No trending topics currently.</p>
-            </div>
-
-            <!-- LIST -->
-            <div th:if="${trendingData != null and !trendingData.isEmpty()}">
-
-                <div th:each="post : ${trendingData}" class="trending-item">
-
-                    <!-- ✅ NO LINK HERE -->
-                    <div style="display: flex; gap: 16px; width: 100%;">
-
-                        <div class="trending-avatar"
-                             th:text="${post.username != null ? post.username.substring(0,1).toUpperCase() : 'T'}">
-                        </div>
-
-                        <div class="trending-content">
-
-                            <div class="trending-user-header">
-                                <span class="trending-username"
-                                      th:text="${post.username}"></span>
-                                <span class="trending-tag">Trending</span>
-                            </div>
-
-                            <div class="trending-text"
-                                 th:text="${post.content}"></div>
-
-                            <div class="trending-footer">
-
-                                <div class="trending-meta-item">
-                                    <i class="fa-regular fa-heart"></i>
-                                    <span th:text="${post.likes}"></span>
-                                </div>
-
-                                <div class="trending-meta-item">
-                                    <i class="fa-regular fa-comment"></i>
-                                    <span th:text="${post.comments}"></span>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
+        <div id="trending-posts-container" class="trending-wrap">
+            <!-- Posts will be injected here -->
+            <div class="loading-state" style="padding: 60px; text-align: center; color: var(--text-muted);">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                <p>Hot content incoming...</p>
             </div>
         </div>
     </main>
 
     <!-- RIGHT SIDEBAR -->
     <aside class="right-sidebar">
-        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 20px;">
-            <i class="fa-solid fa-fire-flame-curved"></i> Trending Topics
-        </h3>
+        <div style="background: var(--bg-card); border-radius: var(--card-radius); padding: 24px; box-shadow: var(--card-shadow);">
+            <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 20px; border-bottom: 2px solid var(--bg-body); padding-bottom: 12px;">
+                <i class="fa-solid fa-fire-flame-curved"></i> Trending Topics
+            </h3>
 
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-            <div><a th:href="@{/trending}">#Tech</a></div>
-            <div><a th:href="@{/trending}">#Sports</a></div>
-            <div><a th:href="@{/trending}">#News</a></div>
-            <div><a th:href="@{/trending}">#Hi</a></div>
+            <div id="trending-topics-list" class="trending-topics-list">
+                <!-- Topics will be injected here -->
+            </div>
         </div>
     </aside>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const topicsList = document.getElementById('trending-topics-list');
+        const postsContainer = document.getElementById('trending-posts-container');
+        const topicTitle = document.getElementById('current-topic-title');
+
+        let currentTopic = '';
+        let currentPage = 0;
+        let isLastPage = false;
+
+        async function fetchTrendingTopics() {
+            try {
+                const response = await fetch('/api/trending', {
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!response.ok) throw new Error('API Error');
+                const topics = await response.json();
+                renderTopics(topics);
+                
+                const topicNames = Object.keys(topics);
+                if (topicNames.length > 0) {
+                    selectTopic(topicNames[0]);
+                } else {
+                    postsContainer.innerHTML = '<p style="text-align: center; padding: 40px;">No topics available.</p>';
+                }
+            } catch (error) {
+                console.error('Error fetching topics:', error);
+                topicsList.innerHTML = '<p style="color: var(--accent); font-size: 0.9rem;">Failed to load topics.</p>';
+                postsContainer.innerHTML = '';
+            }
+        }
+
+        function renderTopics(topics) {
+            topicsList.innerHTML = '';
+            Object.entries(topics).forEach(([name, count], index) => {
+                const topicItem = document.createElement('div');
+                topicItem.dataset.topic = name;
+                topicItem.className = `topic-item ${name === currentTopic ? 'active' : ''}`;
+                topicItem.innerHTML = `
+                    <span>#${name.charAt(0).toUpperCase() + name.slice(1)}</span>
+                    <span class="topic-count">total posts ${count}</span>
+                `;
+                topicItem.addEventListener('click', () => selectTopic(name));
+                topicsList.appendChild(topicItem);
+            });
+        }
+
+        function selectTopic(topic) {
+            currentTopic = topic;
+            currentPage = 0;
+            isLastPage = false;
+            
+            document.querySelectorAll('.topic-item').forEach(el => {
+                el.classList.toggle('active', el.dataset.topic === topic);
+            });
+
+            topicTitle.innerText = `Trending in ${topic.charAt(0).toUpperCase() + topic.slice(1)}`;
+            postsContainer.innerHTML = `
+                <div class="loading-state" style="padding: 60px; text-align: center; color: var(--text-muted);">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                    <p>Fetching the best of ${topic}...</p>
+                </div>
+            `;
+            
+            fetchPosts();
+        }
+
+        async function fetchPosts() {
+            try {
+                const response = await fetch(`/api/trending/${currentTopic}?page=${currentPage}`, {
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (!response.ok) throw new Error('API Error');
+                const data = await response.json();
+                
+                isLastPage = data.last;
+                renderPosts(data.content || [], currentPage === 0);
+                
+                updateLoadMoreButton();
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+                if (currentPage === 0) {
+                    postsContainer.innerHTML = '<p style="text-align: center; padding: 40px;">Failed to load posts for this topic.</p>';
+                }
+            }
+        }
+
+        function renderPosts(posts, isFirstPage) {
+            if (isFirstPage) {
+                if (posts.length === 0) {
+                    postsContainer.innerHTML = `
+                        <div style="color: var(--text-muted); padding: 60px 20px; text-align: center;">
+                            <i class="fa-solid fa-fire-flame-curved" style="font-size: 4rem; opacity: 0.2; margin-bottom: 20px;"></i>
+                            <p>No trending posts in this category yet.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                postsContainer.innerHTML = '';
+            }
+
+            posts.forEach(post => {
+                const postItem = document.createElement('div');
+                postItem.className = 'trending-item';
+                
+                const initial = post.username ? post.username.charAt(0).toUpperCase() : 'T';
+                const formattedDate = post.timestamp ? new Date(post.timestamp).toLocaleDateString(undefined, { 
+                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+                }) : '';
+                
+                postItem.innerHTML = `
+                    <div style="display: flex; gap: 20px; width: 100%; background: var(--bg-card); border-radius: var(--card-radius); box-shadow: var(--card-shadow); padding: 24px; border: 1px solid var(--border); position: relative; transition: var(--transition);">
+                        
+                        <!-- Avatar -->
+                        <div class="trending-avatar" style="width: 60px; height: 60px; font-size: 1.5rem; border-radius: 18px;">${initial}</div>
+                        
+                        <div class="trending-content">
+                            <!-- Header Layer 1: User & Time -->
+                            <div class="trending-user-header" style="margin-bottom: 4px;">
+                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                    <span class="trending-username" style="font-size: 1.1rem; color: var(--text-main);">${post.username || 'Anonymous'}</span>
+                                    <span style="color: var(--text-muted); font-size: 0.9rem;">@${post.username?.toLowerCase().replace(/\s+/g, '') || 'user'}</span>
+                                    <span style="color: var(--border); font-size: 0.8rem;">&bull;</span>
+                                    <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500;">${formattedDate}</span>
+                                </div>
+                                <span class="trending-tag" style="padding: 4px 12px; font-size: 0.7rem;">Trending</span>
+                            </div>
+
+                            <!-- Header Layer 2: Metadata IDs -->
+                            <div style="display: flex; gap: 12px; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 16px; opacity: 0.8; font-weight: 600; letter-spacing: 0.5px;">
+                                <span><i class="fa-regular fa-envelope" style="margin-right: 4px;"></i>${post.email || 'no-email'}</span>
+                                <span><i class="fa-solid fa-id-card" style="margin-right: 4px;"></i>UID: ${post.userId || '0'}</span>
+                                <span><i class="fa-solid fa-hashtag" style="margin-right: 4px;"></i>PID: ${post.postId || '0'}</span>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="trending-text" style="font-size: 1.1rem; line-height: 1.6; color: #334155; margin-bottom: 16px;">
+                                ${post.content}
+                            </div>
+
+                            <!-- Footer Stats -->
+                            <div class="trending-footer" style="padding-top: 12px; border-top: 1px solid var(--bg-body); gap: 40px;">
+                                <div class="trending-meta-item" style="cursor: pointer; color: var(--text-muted);">
+                                    <i class="fa-regular fa-heart" style="font-size: 1.2rem;"></i>
+                                    <span>${post.likes || 0}</span>
+                                </div>
+                                <div class="trending-meta-item" style="cursor: pointer; color: var(--text-muted);">
+                                    <i class="fa-regular fa-comment" style="font-size: 1.2rem;"></i>
+                                    <span>${post.comments || 0}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                postsContainer.appendChild(postItem);
+            });
+        }
+
+        function updateLoadMoreButton() {
+            // Remove existing load more button if any
+            const existingBtn = document.getElementById('load-more-btn');
+            if (existingBtn) existingBtn.remove();
+
+            if (!isLastPage) {
+                const btnContainer = document.createElement('div');
+                btnContainer.id = 'load-more-container';
+                btnContainer.style.textAlign = 'center';
+                btnContainer.style.padding = '20px 0 40px';
+                
+                const loadMoreBtn = document.createElement('button');
+                loadMoreBtn.id = 'load-more-btn';
+                loadMoreBtn.className = 'btn btn-outline';
+                loadMoreBtn.innerText = 'Load More Posts';
+                loadMoreBtn.style.padding = '12px 40px';
+                loadMoreBtn.onclick = () => {
+                    currentPage++;
+                    loadMoreBtn.disabled = true;
+                    loadMoreBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading...';
+                    fetchPosts();
+                };
+                
+                btnContainer.appendChild(loadMoreBtn);
+                postsContainer.appendChild(btnContainer);
+            }
+        }
+
+        // Initialize
+        fetchTrendingTopics();
+    });
+</script>
 
 </div>
 

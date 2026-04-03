@@ -289,30 +289,39 @@ public class F1UIController {
 
 
     @GetMapping("/trending")
-    public String trendingPage(HttpSession session, Model model) { // Add HttpSession here
-
-        List<String> topics = List.of("tech", "adventure", "coding", "travel");
-        List<TrendingDTO> allPosts = new ArrayList<>();
+    public String trendingPage(HttpSession session, Model model) {
         Integer userId = (Integer) session.getAttribute("USER_ID");
+        if (userId == null) return "redirect:/login";
+
+        model.addAttribute("userId", userId);
+        return "trending";
+    }
+
+    // 🔥 PROXY ENDPOINT: TOPICS
+    @GetMapping("/api/trending")
+    @ResponseBody
+    public ResponseEntity<Map<String, Integer>> getTrendingTopicsProxy(HttpSession session) {
+        String url = BASE_URL + "/trending";
         try {
-            for (String topic : topics) {
-                String url = "http://localhost:8082/api/trending/" + topic;
-
-                // Use your helper method to keep logic consistent and include JWT
-                ResponseEntity<TrendingWrapperDTO> response =
-                        callApiWithJwt(url, HttpMethod.GET, session, TrendingWrapperDTO.class);
-
-                if (response.getBody() != null && response.getBody().getContent() != null) {
-                    allPosts.addAll(response.getBody().getContent());
-                }
-            }
-            model.addAttribute("trendingData", allPosts);
-            model.addAttribute("userId", userId);
-            return "trending";
-
+            return callApiWithJwt(url, HttpMethod.GET, session, (Class<Map<String, Integer>>) (Class<?>) Map.class);
         } catch (Exception e) {
-            // If JWT is missing or expired, redirect to login
-            return "redirect:/login";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    // 🔥 PROXY ENDPOINT: POSTS BY TOPIC
+    @GetMapping("/api/trending/{topic}")
+    @ResponseBody
+    public ResponseEntity<TrendingWrapperDTO> getTrendingPostsProxy(
+            @PathVariable String topic,
+            @RequestParam(defaultValue = "0") int page,
+            HttpSession session) {
+        
+        String url = BASE_URL + "/trending/" + topic + "?page=" + page;
+        try {
+            return callApiWithJwt(url, HttpMethod.GET, session, TrendingWrapperDTO.class);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 

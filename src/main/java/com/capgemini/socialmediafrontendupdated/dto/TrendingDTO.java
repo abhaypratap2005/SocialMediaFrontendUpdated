@@ -11,7 +11,7 @@ public class TrendingDTO {
     private String content;
     private LocalDateTime timestamp;
 
-    @JsonProperty("userID")
+    @JsonProperty("userId")
     private int userId;
     private String username;
     private String email;
