@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friends | Social Media</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/friends.css}">
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <a th:href="@{/feed/{id}(id=${userId})}">
+                <i class="fa-solid fa-cloud"></i>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+            <a th:href="@{/feed/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-house"></i> <span>Feed</span>
+            </a>
+            <a th:href="@{/messages/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-envelope"></i> <span>Messages</span>
+            </a>
+            <a th:href="@{/notifications/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-bell"></i> <span>Notifications</span>
+            </a>
+            <a th:href="@{/friends/{id}(id=${userId})}" class="nav-item active">
+                <i class="fa-solid fa-user-group"></i> <span>Friends</span>
+            </a>
+            <a th:href="@{/trending}" class="nav-item">
+                <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
+            </a>
+        </nav>
+
+        <div class="logout-container">
+            <a th:href="@{/web/logout}" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-frame">
+        <header class="page-header">
+            <h2>Friends</h2>
+        </header>
+
+        <div class="friends-container">
+
+            <!-- EMPTY STATE -->
+            <div th:if="${friends == null or friends.empty}"
+                 class="p-4 text-center"
+                 style="color: var(--text-muted); padding: 60px 20px;">
+                <i class="fa-solid fa-user-slash"
+                   style="font-size: 4rem; opacity: 0.2; margin-bottom: 20px;"></i>
+                <p>No friends in your paddock yet. Connect with the community!</p>
+            </div>
+
+            <!-- FRIEND LIST -->
+            <div th:each="friend : ${friends}" class="friend-item">
+
+                <div class="friend-info">
+
+                    <!-- AVATAR -->
+                    <div class="avatar"
+                         th:text="${friend.user1ID == userId
+                                  ? (friend.user2Name != null ? friend.user2Name.substring(0,1).toUpperCase() : 'U')
+                                  : (friend.user1Name != null ? friend.user1Name.substring(0,1).toUpperCase() : 'U')}">
+                        U
+                    </div>
+
+                    <div>
+                        <!-- NAME -->
+                        <div class="friend-name"
+                             th:text="${friend.user1ID == userId
+                                      ? (friend.user2Name != null ? friend.user2Name : 'Unknown')
+                                      : (friend.user1Name != null ? friend.user1Name : 'Unknown')}">
+                            Username
+                        </div>
+
+                        <!-- STATUS -->
+                        <div class="friend-status"
+                             th:classappend="${friend.status == 'ACTIVE'} ? 'status-active' : ''"
+                             th:text="'Status: ' + ${friend.status}">
+                            Status
+                        </div>
+
+                        <!-- USER ID -->
+                        <div style="font-size: 0.75rem; color: #999;"
+                             th:text="${friend.user1ID == userId
+                                      ? 'User ID: ' + friend.user2ID
+                                      : 'User ID: ' + friend.user1ID}">
+                            ID
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ACTION -->
+                <div class="friend-actions">
+                    <button class="btn btn-outline"
+                            style="padding: 6px 16px; font-size: 0.85rem;">
+                        Message
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="right-sidebar">
+        <div style="background: var(--bg-secondary); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 8px;">
+                Paddock Updates
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">
+                Check out the latest trending posts to stay updated.
+            </p>
+        </div>
+    </aside>
+
+</div>
+
+</body>
+</html>

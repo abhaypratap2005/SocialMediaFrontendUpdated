@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending | Social Media</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/trending.css}">
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <a th:href="${userId != null} ? @{/feed/{id}(id=${userId})} : @{/login}">
+                <i class="fa-solid fa-cloud"></i>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+
+            <a th:href="${userId != null} ? @{/feed/{id}(id=${userId})} : @{/login}" class="nav-item">
+                <i class="fa-solid fa-house"></i> <span>Feed</span>
+            </a>
+
+            <a th:href="${userId != null} ? @{/messages/{id}(id=${userId})} : @{/login}" class="nav-item">
+                <i class="fa-solid fa-envelope"></i> <span>Messages</span>
+            </a>
+
+            <a th:href="${userId != null} ? @{/notifications/{id}(id=${userId})} : @{/login}" class="nav-item">
+                <i class="fa-solid fa-bell"></i> <span>Notifications</span>
+            </a>
+
+            <a th:href="${userId != null} ? @{/friends/{id}(id=${userId})} : @{/login}" class="nav-item">
+                <i class="fa-solid fa-user-group"></i> <span>Friends</span>
+            </a>
+
+            <a th:href="@{/trending}" class="nav-item active">
+                <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
+            </a>
+
+        </nav>
+
+        <div class="logout-container">
+            <a th:href="@{/web/logout}" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-frame">
+        <header class="page-header">
+            <h2>Trending</h2>
+        </header>
+
+        <div class="trending-wrap">
+
+            <!-- EMPTY -->
+            <div th:if="${trendingData == null or trendingData.isEmpty()}"
+                 class="p-4 text-center"
+                 style="color: var(--text-muted); padding: 60px 20px;">
+                <i class="fa-solid fa-fire-flame-curved"
+                   style="font-size: 4rem; opacity: 0.2; margin-bottom: 20px;"></i>
+                <p>No trending topics currently.</p>
+            </div>
+
+            <!-- LIST -->
+            <div th:if="${trendingData != null and !trendingData.isEmpty()}">
+
+                <div th:each="post : ${trendingData}" class="trending-item">
+
+                    <a th:href="${userId != null} ?
+                        @{/post/{postId}/{userId}(postId=${post.postId}, userId=${userId})}
+                        : @{/login}"
+                       style="display: flex; gap: 16px; width: 100%;">
+
+                        <div class="trending-avatar"
+                             th:text="${post.username != null ? post.username.substring(0,1).toUpperCase() : 'T'}">
+                        </div>
+
+                        <div class="trending-content">
+
+                            <div class="trending-user-header">
+                                <span class="trending-username"
+                                      th:text="${post.username}"></span>
+                                <span class="trending-tag">Trending</span>
+                            </div>
+
+                            <div class="trending-text"
+                                 th:text="${post.content}"></div>
+
+                            <div class="trending-footer">
+
+                                <div class="trending-meta-item">
+                                    <i class="fa-regular fa-heart"></i>
+                                    <span th:text="${post.likes}"></span>
+                                </div>
+
+                                <div class="trending-meta-item">
+                                    <i class="fa-regular fa-comment"></i>
+                                    <span th:text="${post.comments}"></span>
+                                </div>
+
+<!--                                <div class="trending-meta-item" style="margin-left: auto;">-->
+<!--                                    <span style="font-size: 0.75rem; color: #999;"-->
+<!--                                          th:text="'User ID: ' + ${post.userId}"></span>-->
+<!--                                </div>-->
+
+                            </div>
+                        </div>
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="right-sidebar">
+
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 20px;">
+            <i class="fa-solid fa-fire-flame-curved"></i> Trending Topics
+        </h3>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div><a th:href="@{/trending}">#Tech</a></div>
+            <div><a th:href="@{/trending}">#Sports</a></div>
+            <div><a th:href="@{/trending}">#News</a></div>
+            <div><a th:href="@{/trending}">#Hi</a></div>
+        </div>
+
+    </aside>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages | Social Media</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- BASE CSS -->
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <!-- PAGE CSS -->
+    <link rel="stylesheet" th:href="@{/css/messages.css}">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- SIDEBAR (DUPLICATED FOR INDEPENDENCE) -->
+    <aside class="sidebar">
+        <div class="logo">
+            <a th:href="@{/feed/{id}(id=${userId})}">
+                <i class="fa-solid fa-cloud"></i>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+            <a th:href="@{/feed/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-house"></i> <span>Feed</span>
+            </a>
+            <a th:href="@{/messages/{id}(id=${userId})}" class="nav-item active">
+                <i class="fa-solid fa-envelope"></i> <span>Messages</span>
+            </a>
+            <a th:href="@{/notifications/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-bell"></i> <span>Notifications</span>
+            </a>
+            <a th:href="@{/friends/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-user-group"></i> <span>Friends</span>
+            </a>
+            <a th:href="@{/trending}" class="nav-item">
+                <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
+            </a>
+        </nav>
+
+        <div class="logout-container">
+            <a th:href="@{/web/logout}" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN FRAME -->
+    <main class="main-frame">
+        <header class="page-header">
+            <h2>Messages</h2>
+        </header>
+        
+        <div class="messages-list">
+            <!-- Empty State -->
+            <div th:if="${messages == null or messages.empty}" class="p-4 text-center" 
+                style="color: var(--text-muted); padding: 60px 20px;">
+                <i class="fa-solid fa-envelope-open-text" style="font-size: 4rem; opacity: 0.2; margin-bottom: 20px;"></i>
+                <p>No messages in your inbox. Start a conversation with your crew!</p>
+            </div>
+
+            <!-- Messages List -->
+            <div th:each="msg : ${messages}" class="message-item" 
+                th:classappend="${msg.isRead} ? '' : 'msg-unread'">
+                
+                <div class="avatar" th:text="${msg.senderName != null ? msg.senderName.substring(0, 1).toUpperCase() : 'S'}">S</div>
+                
+                <div class="msg-main">
+                    <div class="msg-header">
+                        <span class="msg-sender" th:text="${msg.senderName}">Sender Name</span>
+                        <span class="msg-time" th:text="${#temporals.format(msg.timestamp, 'HH:mm')}">Time</span>
+                    </div>
+                    <div class="msg-preview" th:classappend="${msg.isRead} ? '' : 'unread'" 
+                        th:text="${msg.messageText}">Message preview...</div>
+                    <div style="font-size: 0.7rem; color: #999; margin-top: 6px;">
+                        <span th:text="'Msg ID: ' + ${msg.messageID}">ID</span> · 
+                        <span th:text="'To: ' + ${msg.receiverName}">Receiver</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR (DUPLICATED) -->
+    <aside class="right-sidebar">
+        <div style="background: var(--bg-secondary); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 8px;">Paddock Updates</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Check out the latest trending posts to stay updated.</p>
+        </div>
+    </aside>
+</div>
+
+</body>
+</html>

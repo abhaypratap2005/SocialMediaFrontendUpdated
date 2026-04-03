@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Comments | Social Media</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- BASE CSS -->
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <!-- PAGE CSS -->
+    <link rel="stylesheet" th:href="@{/css/post.css}">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- SIDEBAR (DUPLICATED FOR INDEPENDENCE) -->
+    <aside class="sidebar">
+        <div class="logo">
+            <a th:href="@{/feed/{id}(id=${userId})}">
+                <i class="fa-solid fa-cloud"></i>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+            <a th:href="@{/feed/{id}(id=${userId})}" class="nav-item active">
+                <i class="fa-solid fa-house"></i> <span>Feed</span>
+            </a>
+            <a th:href="@{/messages/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-envelope"></i> <span>Messages</span>
+            </a>
+            <a th:href="@{/notifications/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-bell"></i> <span>Notifications</span>
+            </a>
+            <a th:href="@{/friends/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-user-group"></i> <span>Friends</span>
+            </a>
+            <a th:href="@{/trending}" class="nav-item">
+                <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
+            </a>
+        </nav>
+
+        <div class="logout-container">
+            <a th:href="@{/web/logout}" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN FRAME -->
+    <main class="main-frame">
+        <header class="page-header">
+            <h2>Post Comments</h2>
+        </header>
+        
+        <div class="post-interaction-tabs">
+            <a th:href="@{/post/{postId}/{userId}/likes(postId=${postId}, userId=${userId})}" 
+               class="post-tab-link">
+               Likes
+            </a>
+            <a th:href="@{/post/{postId}/{userId}/comments(postId=${postId}, userId=${userId})}" 
+               class="post-tab-link active">
+               Comments (<span th:text="${comments != null ? comments.size() : 0}">0</span>)
+            </a>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${comments == null or comments.empty}" class="p-4 text-center" 
+             style="color: var(--text-muted); padding: 60px 20px;">
+            <i class="fa-regular fa-comment-dots" style="font-size: 4rem; opacity: 0.2; margin-bottom: 20px;"></i>
+            <p>No comments yet. Start the conversation!</p>
+        </div>
+
+        <!-- Comments List -->
+        <div th:each="comment : ${comments}" class="comment-item">
+            <div class="avatar" th:text="${comment.username != null ? comment.username.substring(0, 1).toUpperCase() : 'C'}">C</div>
+            
+            <div class="comment-body">
+                <div class="comment-meta">
+                    <span class="post-username" th:text="${comment.username}">Username</span>
+                    <span class="post-time" th:text="' · ' + ${#temporals.format(comment.timestamp, 'HH:mm')}">Time</span>
+                </div>
+                
+                <div class="comment-text" th:text="${comment.commentText}">Comment textContent...</div>
+                
+                <div class="post-actions" style="max-width: 200px; font-size: 0.85rem;">
+                    <div class="action-item"><i class="fa-regular fa-heart"></i> <span th:text="${comment.likeCount}">0</span></div>
+                    <div class="action-item"><i class="fa-solid fa-share-nodes"></i></div>
+                </div>
+                
+                <div style="font-size: 0.7rem; color: #999; margin-top: 10px;">
+                    <span th:text="'Comment ID: ' + ${comment.commentID}">ID</span> · 
+                    <span th:text="'User ID: ' + ${comment.userID}">ID</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="padding: 20px; text-align: center;">
+            <a th:href="@{/post/{postId}/{userId}(postId=${postId}, userId=${userId})}" class="btn btn-ghost" style="width: 100%;">Back to Post</a>
+        </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR (DUPLICATED) -->
+    <aside class="right-sidebar">
+        <div style="background: var(--bg-secondary); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 8px;">Paddock Updates</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Check out the latest trending posts to stay updated.</p>
+        </div>
+    </aside>
+</div>
+
+</body>
+</html>

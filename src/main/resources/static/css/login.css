@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Outfit', sans-serif;
+    /* Massive, beautiful background gradient for login */
+    background: linear-gradient(135deg, #1E1B4B 0%, #4338CA 50%, #F43F5E 100%);
+    color: #0F172A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.login-container { width: 100%; padding: 20px; display: flex; justify-content: center; }
+
+.login-card {
+    background: #FFFFFF;
+    width: 100%;
+    max-width: 440px;
+    padding: 50px 40px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.login-logo {
+    font-size: 4rem;
+    background: linear-gradient(135deg, #4338CA, #F43F5E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-title { font-size: 2rem; font-weight: 900; text-align: center; margin-bottom: 32px; letter-spacing: -0.03em; }
+
+.form-group { margin-bottom: 24px; }
+.form-group label { display: block; margin-bottom: 8px; color: #475569; font-weight: 700; font-size: 0.95rem; }
+
+.input-control {
+    width: 100%; padding: 16px;
+    border: 2px solid #E2E8F0; border-radius: 12px;
+    background: #F8FAFC; color: #0F172A;
+    font-size: 1rem; font-weight: 500; font-family: inherit;
+    outline: none; transition: all 0.3s ease; box-sizing: border-box;
+}
+
+.input-control:focus {
+    border-color: #4F46E5; background: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+}
+
+.btn-login {
+    width: 100%; padding: 16px;
+    font-size: 1.15rem; font-family: inherit; font-weight: 800;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #4F46E5, #3730A3);
+    color: #ffffff; border: none; cursor: pointer; transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.btn-login:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(67, 56, 202, 0.3);
+}
+
+.error-box {
+    background: #FEF2F2; color: #E11D48; padding: 16px; border-radius: 12px;
+    margin-bottom: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px;
+}

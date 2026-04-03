@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed | Social Media</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS -->
+
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/feed.css}">
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            <a th:href="@{/feed/{id}(id=${userId})}">
+                <i class="fa-solid fa-cloud"></i>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+            <a th:href="@{/feed/{id}(id=${userId})}" class="nav-item active">
+                <i class="fa-solid fa-house"></i> <span>Feed</span>
+            </a>
+            <a th:href="@{/messages/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-envelope"></i> <span>Messages</span>
+            </a>
+            <a th:href="@{/notifications/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-bell"></i> <span>Notifications</span>
+            </a>
+            <a th:href="@{/friends/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-user-group"></i> <span>Friends</span>
+            </a>
+            <a th:href="@{/trending}" class="nav-item">
+                <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
+            </a>
+        </nav>
+
+        <div class="logout-container">
+            <a th:href="@{/web/logout}" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-frame">
+        <header class="page-header">
+            <h2>Feed</h2>
+        </header>
+
+        <div class="feed-container">
+
+            <!-- EMPTY -->
+            <div th:if="${posts == null or posts.empty}" class="empty-state">
+                <i class="fa-solid fa-cloud-moon"></i>
+                <p>No activity yet</p>
+            </div>
+
+            <!-- POSTS -->
+            <div th:each="post : ${posts}">
+
+                <!-- ✅ FIXED LINK -->
+                <a th:href="@{/post/{postId}/{userId}(postId=${post.postId}, userId=${post.userId})}"
+                   class="post-item">
+
+                    <!-- AVATAR -->
+                    <div class="avatar"
+                         th:text="${post.username != null ? post.username.substring(0,1).toUpperCase() : 'U'}">
+                        U
+                    </div>
+
+                    <!-- CONTENT -->
+                    <div class="post-content-area">
+
+                        <div class="post-meta">
+                            <span class="post-username"
+                                  th:text="${post.username}">Username</span>
+
+                            <span class="post-time"
+                                  th:text="' · ' + ${#temporals.format(post.timestamp, 'HH:mm')}">
+                                Time
+                            </span>
+                        </div>
+
+                        <div class="post-text">
+                            <p th:text="${post.contentPreview}">Preview...</p>
+                        </div>
+
+
+
+
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- RIGHT -->
+    <aside class="right-sidebar">
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+            <i class="fa-solid fa-flag-checkered" style="color: var(--primary); margin-right: 8px;"></i> Next Race
+        </h3>
+        
+        <div style="background: var(--bg); border-radius: 12px; padding: 16px; margin-bottom: 24px; border: 1px solid var(--border);">
+            <p style="font-weight: 700; font-size: 1.1rem; margin-bottom: 4px;">Monaco Grand Prix</p>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">Circuit de Monaco</p>
+            <div style="display: flex; gap: 10px;">
+                <div style="background: var(--primary); color: white; padding: 8px 12px; border-radius: 8px; text-align: center; flex: 1;">
+                    <span style="display: block; font-size: 1.2rem; font-weight: 800;">2</span>
+                    <span style="font-size: 0.7rem; text-transform: uppercase;">Days</span>
+                </div>
+                <div style="background: var(--primary); color: white; padding: 8px 12px; border-radius: 8px; text-align: center; flex: 1;">
+                    <span style="display: block; font-size: 1.2rem; font-weight: 800;">14</span>
+                    <span style="font-size: 0.7rem; text-transform: uppercase;">Hrs</span>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+            <i class="fa-solid fa-fire-flame-curved" style="color: var(--primary); margin-right: 8px;"></i> Trending Topics
+        </h3>
+        
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">1 · Formula 1 · Trending</p>
+                <p style="font-weight: 700; font-size: 1rem;"><a th:href="@{/trending}">#MonacoGP</a></p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">125K Posts</p>
+            </div>
+            <div>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">2 · Racing · Trending</p>
+                <p style="font-weight: 700; font-size: 1rem;"><a th:href="@{/trending}">Driver Market 2026</a></p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">98K Posts</p>
+            </div>
+            <div>
+                <p style="color: var(--text-muted); font-size: 0.8rem;">3 · Sports · Trending</p>
+                <p style="font-weight: 700; font-size: 1rem;"><a th:href="@{/trending}">New Regulations</a></p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">45K Posts</p>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <a th:href="@{/trending}" class="btn btn-outline" style="width: 100%;">Explore More</a>
+        </div>
+    </aside>
+
+</div>
+
+</body>
+</html>

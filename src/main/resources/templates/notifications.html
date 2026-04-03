@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications | Social Media</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- BASE CSS -->
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <!-- PAGE CSS -->
+    <link rel="stylesheet" th:href="@{/css/notifications.css}">
+</head>
+<body>
+
+<div class="app-container">
+    <!-- SIDEBAR (DUPLICATED FOR INDEPENDENCE) -->
+    <aside class="sidebar">
+        <div class="logo">
+            <a th:href="@{/feed/{id}(id=${userId})}">
+                <i class="fa-solid fa-cloud"></i>
+            </a>
+        </div>
+
+        <nav class="nav-menu">
+            <a th:href="@{/feed/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-house"></i> <span>Feed</span>
+            </a>
+            <a th:href="@{/messages/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-envelope"></i> <span>Messages</span>
+            </a>
+            <a th:href="@{/notifications/{id}(id=${userId})}" class="nav-item active">
+                <i class="fa-solid fa-bell"></i> <span>Notifications</span>
+            </a>
+            <a th:href="@{/friends/{id}(id=${userId})}" class="nav-item">
+                <i class="fa-solid fa-user-group"></i> <span>Friends</span>
+            </a>
+            <a th:href="@{/trending}" class="nav-item">
+                <i class="fa-solid fa-arrow-trend-up"></i> <span>Trending</span>
+            </a>
+        </nav>
+
+        <div class="logout-container">
+            <a th:href="@{/web/logout}" class="nav-item">
+                <i class="fa-solid fa-right-from-bracket"></i> <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN FRAME -->
+    <main class="main-frame">
+        <header class="page-header">
+            <h2>Notifications</h2>
+        </header>
+        
+        <div class="notifications-list">
+            <!-- Empty State -->
+            <div th:if="${notifications == null or notifications.empty}" class="p-4 text-center" 
+                style="color: var(--text-muted); padding: 60px 20px;">
+                <i class="fa-solid fa-bell-slash" style="font-size: 4rem; opacity: 0.2; margin-bottom: 20px;"></i>
+                <p>No new notifications. Everything is up to date!</p>
+            </div>
+
+            <!-- Notifications List -->
+            <div th:each="notif : ${notifications}" class="notification-item" 
+                th:classappend="${notif.isRead} ? '' : 'notif-unread'">
+                
+                <div class="notif-icon">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                </div>
+                
+                <div class="notif-content">
+                    <div class="notif-text" th:text="${notif.content}">Notification content...</div>
+                    <div class="notif-time" th:text="${#temporals.format(notif.timestamp, 'MMM d, yyyy HH:mm')}">Time</div>
+                    <div style="font-size: 0.7rem; color: #999; margin-top: 4px;" th:text="'Notify ID: ' + ${notif.notificationID}">ID</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR (DUPLICATED) -->
+    <aside class="right-sidebar">
+        <div style="background: var(--bg-secondary); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+            <h3 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 8px;">Paddock Updates</h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Check out the latest trending posts to stay updated.</p>
+        </div>
+    </aside>
+</div>
+
+</body>
+</html>
