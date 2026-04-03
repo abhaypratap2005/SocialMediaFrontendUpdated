@@ -8,17 +8,8 @@ public class FriendDTO {
     private Integer friendshipID;
     private String status;
 
-    @JsonProperty("user1Id")
-    private Integer user1ID;
+    @JsonProperty("userID")
+    private Integer userID;
 
-    @JsonProperty("user1Name")
-    private String user1Name;
-
-    @JsonProperty("user2Id")
-    private Integer user2ID;
-
-    @JsonProperty("user2Name")
-    private String user2Name;
-
-    private String since;
+    private String username;
 }

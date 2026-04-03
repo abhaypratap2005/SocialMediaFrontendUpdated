@@ -73,18 +73,14 @@
 
                     <!-- AVATAR -->
                     <div class="avatar"
-                         th:text="${friend.user1ID == userId
-                                  ? (friend.user2Name != null ? friend.user2Name.substring(0,1).toUpperCase() : 'U')
-                                  : (friend.user1Name != null ? friend.user1Name.substring(0,1).toUpperCase() : 'U')}">
+                         th:text="${friend.username != null ? friend.username.substring(0,1).toUpperCase() : 'U'}">
                         U
                     </div>
 
                     <div>
                         <!-- NAME -->
                         <div class="friend-name"
-                             th:text="${friend.user1ID == userId
-                                      ? (friend.user2Name != null ? friend.user2Name : 'Unknown')
-                                      : (friend.user1Name != null ? friend.user1Name : 'Unknown')}">
+                             th:text="${friend.username != null ? friend.username : 'Unknown'}">
                             Username
                         </div>
 
@@ -95,13 +91,11 @@
                             Status
                         </div>
 
-                        <!-- USER ID -->
-<!--                        <div style="font-size: 0.75rem; color: #999;"-->
-<!--                             th:text="${friend.user1ID == userId-->
-<!--                                      ? 'User ID: ' + friend.user2ID-->
-<!--                                      : 'User ID: ' + friend.user1ID}">-->
-<!--                            ID-->
-<!--                        </div>-->
+                        <!-- IDS (New) -->
+                        <div class="friend-ids" style="display: flex; gap: 12px; margin-top: 4px; font-size: 0.75rem; color: var(--text-muted);">
+                            <span th:text="'User ID: ' + ${friend.userID}">ID</span>
+                            <span th:text="'Friendship ID: ' + ${friend.friendshipID}">ID</span>
+                        </div>
                     </div>
 
                 </div>
